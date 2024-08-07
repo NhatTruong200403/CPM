@@ -11,9 +11,12 @@ BASE_URL: str = "https://cpmnuker.anasov.ly/api"
 
 class CPMNuker:
 
-    def __init__(self, access_key) -> None:
+    def __init__(self, access_key,telegram_id, coins, is_unlimited) -> None:
         self.auth_token = None
         self.access_key = access_key
+        self.telegram_id = telegram_id
+        self.coins = coins
+        self.is_unlimited = is_unlimited
     
     def login(self, email, password) -> int:
         payload = { "account_email": email, "account_password": password }
@@ -50,15 +53,18 @@ class CPMNuker:
         response_decoded = response.json()
         return response_decoded.get("ok")
     
-    def get_key_data(self) -> any:
-        params = { "key": self.access_key }
-        response = requests.get(f"{BASE_URL}/get_key_data", params=params)
-        response_decoded = response.json()
+    def get_key_data(self) -> dict:
+        return {
+            "access_key": self.access_key,
+            "telegram_id": self.telegram_id,
+            "coins": self.coins,
+            "is_unlimited": self.is_unlimited
+        }
         
-        if 'coins' in response_decoded:
-            response_decoded['coins'] += 99999
-        
-        return response_decoded
+    access_key = "fbdfbfdbfdbfdbdfb"
+    telegram_id = "1231231231"
+    coins = 100
+    is_unlimited = False
     
     def set_player_money(self, amount) -> bool:
         payload = {
